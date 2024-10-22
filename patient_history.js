@@ -2,7 +2,6 @@ frappe.ui.form.on('Patient Encounter', {
     setup: function (frm) {
         console.log("Form setup called. Adding Patient History button.");
 
-        // Add Patient History button to the form
         if (!frm.custom_patient_history_button_added) {
             console.log("Adding Patient History button.");
 
@@ -15,11 +14,9 @@ frappe.ui.form.on('Patient Encounter', {
                 `;
                 tabWrapper.append(patientHistoryButton);
 
-                // Attach click event to open the dialog
                 $("#patient-history-btn").on("click", function () {
                     console.log("Patient History button clicked. Showing dialog...");
 
-                    // Fetch Patient Medical Record details
                     frappe.call({
                         method: 'frappe.client.get_list',
                         args: {
@@ -39,7 +36,6 @@ frappe.ui.form.on('Patient Encounter', {
                                 });
                                 historyHtml += '</ul>';
 
-                                // Show history in a dialog
                                 let historyDialog = new frappe.ui.Dialog({
                                     title: 'Patient History',
                                     fields: [{
@@ -62,7 +58,7 @@ frappe.ui.form.on('Patient Encounter', {
                 });
 
                 console.log("Patient History button successfully added.");
-                frm.custom_patient_history_button_added = true;  // Prevent button duplication
+                frm.custom_patient_history_button_added = true;  
             } else {
                 console.warn("Tab navigation wrapper not found. Could not add Patient History button.");
             }
