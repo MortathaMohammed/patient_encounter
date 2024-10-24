@@ -122,10 +122,9 @@ frappe.ui.form.on('Patient Encounter', {
                 },
                 secondary_action_label: 'Save & Close',
                 secondary_action: function() {
-                    // Save the form and close the dialog
                     frm.save().then(() => {
                         frappe.msgprint(__('Document saved successfully.'));
-                        dialog.hide(); // Close the dialog after saving
+                        dialog.hide();
                     }).catch(error => {
                         frappe.msgprint(__('Error while saving the document.'));
                     });
