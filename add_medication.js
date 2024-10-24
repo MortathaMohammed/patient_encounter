@@ -1,6 +1,6 @@
 frappe.ui.form.on('Patient Encounter', {
-    refresh: function (frm) {
-        frm.add_custom_button(__('Medication'), function () {
+    refresh: function(frm) {
+        frm.add_custom_button(__('Medication'), function() {
             let dialog = new frappe.ui.Dialog({
                 title: 'Add New Medication',
                 fields: [
@@ -8,9 +8,9 @@ frappe.ui.form.on('Patient Encounter', {
                         label: 'Medication',
                         fieldname: 'medication',
                         fieldtype: 'Link',
-                        options: 'Medication',
+                        options: 'Medication', 
                         reqd: 1,
-                        change: function () {
+                        change: function() {
                             let medication_name = dialog.get_value('medication');
                             if (medication_name) {
                                 frappe.db.get_doc('Medication', medication_name)
@@ -31,9 +31,9 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'drug_code',
                         fieldtype: 'Link',
                         options: 'Item',
-                        get_query: function () {
+                        get_query: function() {
                             let medication_value = dialog.get_value('medication');
-
+                            
                             return {
                                 filters: {
                                     'is_stock_item': 'Yes'
@@ -60,7 +60,7 @@ frappe.ui.form.on('Patient Encounter', {
                         reqd: 1
                     },
                     {
-                        fieldtype: 'Column Break'
+                        fieldtype: 'Column Break' 
                     },
                     {
                         label: 'Dosage',
@@ -86,10 +86,10 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'intent',
                         fieldtype: 'Link',
                         options: 'Code Value',
-                        get_query: function () {
+                        get_query: function() {
                             return {
                                 filters: {
-                                    'code_system': 'Intent'
+                                    'code_system': 'Intent' 
                                 }
                             };
                         }
@@ -99,7 +99,7 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'priority',
                         fieldtype: 'Link',
                         options: 'Code Value',
-                        get_query: function () {
+                        get_query: function() {
                             return {
                                 filters: {
                                     'code_system': 'Priority'
@@ -119,7 +119,7 @@ frappe.ui.form.on('Patient Encounter', {
                 primary_action_label: 'Add Medication',
                 primary_action(values) {
                     if (values) {
-
+                        
                         let new_row = frm.add_child('drug_prescription');
                         new_row.medication = values.medication;
                         new_row.drug_code = values.drug_code;
@@ -139,11 +139,18 @@ frappe.ui.form.on('Patient Encounter', {
                         frappe.msgprint(__('Please fill in all the required fields.'));
                     }
                 },
-
-                secondary_action_label: 'Close',
-                secondary_action: function () {
-                    dialog.hide();
+                
+                secondary_action_label: 'Save & Close',
+                secondary_action: function() {
+                   
+                    frm.save().then(() => {
+                        frappe.msgprint(__('Document saved successfully.'));
+                        dialog.hide(); 
+                    }).catch(error => {
+                        frappe.msgprint(__('Error while saving the document.'));
+                    });
                 }
+                
             });
             dialog.show();
         });

@@ -1,19 +1,19 @@
 frappe.ui.form.on('Patient Encounter', {
-    refresh: function (frm) {
-        frm.add_custom_button(__('Procedures'), function () {
+    refresh: function(frm) {
+        frm.add_custom_button(__('Procedures'), function() {
             let dialog = new frappe.ui.Dialog({
                 title: 'Add New Procedure',
                 fields: [
                     {
-                        label: 'Clinical Procedure',
-                        fieldname: 'procedure',
-                        fieldtype: 'Link',
-                        options: 'Clinical Procedure Template',
-                        change: function () {
-
+                      label: 'Clinical Procedure',
+                      fieldname: 'procedure',
+                      fieldtype: 'Link',
+                      options: 'Clinical Procedure Template',
+                      change: function() {
+                          
                             let procedure_name = dialog.get_value('procedure');
                             if (procedure_name) {
-
+                               
                                 frappe.db.get_doc('Clinical Procedure Template', procedure_name)
                                     .then(procedure => {
                                         if (procedure) {
@@ -23,18 +23,18 @@ frappe.ui.form.on('Patient Encounter', {
                                     });
                             }
                         },
-                        reqd: 1
+                      reqd: 1
                     },
                     {
-                        label: 'Procedure Name',
-                        fieldname: 'procedure_name',
-                        fieldtype: 'Data',
+                      label: 'Procedure Name',
+                      fieldname: 'procedure_name',
+                      fieldtype: 'Data',
                     },
                     {
-                        label: 'Department',
-                        fieldname: 'department',
-                        fieldtype: 'Link',
-                        options: 'Medical Department'
+                      label: 'Department',
+                      fieldname: 'department',
+                      fieldtype: 'Link',
+                      options: 'Medical Department'
                     },
                     {
                         label: 'Referring Practitioner',
@@ -74,7 +74,7 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'intent',
                         fieldtype: 'Link',
                         options: 'Code Value',
-                        get_query: function () {
+                        get_query: function() {
                             return {
                                 filters: {
                                     'code_system': 'Intent'
@@ -87,7 +87,7 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'priority',
                         fieldtype: 'Link',
                         options: "Code Value",
-                        get_query: function () {
+                        get_query: function() {
                             return {
                                 filters: {
                                     'code_system': 'Priority'
@@ -99,7 +99,7 @@ frappe.ui.form.on('Patient Encounter', {
                 primary_action_label: 'Add Procedure',
                 primary_action(values) {
                     if (values) {
-
+                        
                         let new_row = frm.add_child('procedure_prescription');
                         new_row.procedure = values.procedure;
                         new_row.procedure_name = values.procedure_name;
@@ -117,15 +117,20 @@ frappe.ui.form.on('Patient Encounter', {
                     } else {
                         frappe.msgprint(__('Please fill in all the required fields.'));
                     }
-
-
+                    
+                    
                 },
-                secondary_action_label: 'Close',
-                secondary_action: function () {
-                    dialog.hide();
-                },
+                secondary_action_label: 'Save & Close',
+                secondary_action: function() {
+                    // Save the form and close the dialog
+                    frm.save().then(() => {
+                        frappe.msgprint(__('Document saved successfully.'));
+                        dialog.hide(); // Close the dialog after saving
+                    }).catch(error => {
+                        frappe.msgprint(__('Error while saving the document.'));
+                    });
+                }
             });
-
             dialog.show();
         });
     }

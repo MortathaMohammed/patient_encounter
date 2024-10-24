@@ -1,6 +1,6 @@
 frappe.ui.form.on('Patient Encounter', {
-    refresh: function (frm) {
-        frm.add_custom_button(__('Investigation'), function () {
+    refresh: function(frm) {
+        frm.add_custom_button(__('Investigation'), function() {
             let dialog = new frappe.ui.Dialog({
                 title: 'Add New Investigation',
                 fields: [
@@ -38,7 +38,7 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'intent',
                         fieldtype: 'Link',
                         options: 'Code Value',
-                        get_query: function () {
+                        get_query: function() {
                             return {
                                 filters: {
                                     'code_system': 'Intent'
@@ -51,7 +51,7 @@ frappe.ui.form.on('Patient Encounter', {
                         fieldname: 'priority',
                         fieldtype: 'Link',
                         options: "Code Value",
-                        get_query: function () {
+                        get_query: function() {
                             return {
                                 filters: {
                                     'code_system': 'Priority'
@@ -87,9 +87,15 @@ frappe.ui.form.on('Patient Encounter', {
                         frappe.msgprint(__('Please fill in all the required fields.'));
                     }
                 },
-                secondary_action_label: 'Close',
-                secondary_action: function () {
-                    dialog.hide();
+                secondary_action_label: 'Save & Close',
+                secondary_action: function() {
+                  
+                    frm.save().then(() => {
+                        frappe.msgprint(__('Document saved successfully.'));
+                        dialog.hide(); 
+                    }).catch(error => {
+                        frappe.msgprint(__('Error while saving the document.'));
+                    });
                 }
             });
 
